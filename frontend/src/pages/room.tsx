@@ -1,9 +1,24 @@
 import { useParams } from 'react-router-dom'
 import amaLogo from '../assets/ama-logo.svg'
-import { ArrowRight, ArrowUp, Share2 } from 'lucide-react'
+import { ArrowRight, Share2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { Messages } from '../components/messages'
+import { Suspense } from 'react'
 
 export function Room() {
   const { roomId } = useParams()
+
+  function handleShareRoom() {
+    const url = window.location.href.toString()
+
+    if (navigator.share !== undefined && navigator.canShare()) {
+      navigator.share({ url })
+    } else {
+      navigator.clipboard.writeText(url)
+
+      toast.info('O link da sala foi copiado para a área de transferência!')
+    }
+  }
 
   return (
     <div className="m-auto max-w-[640px] flex flex-col gap-6 py-10 px-4">
@@ -16,6 +31,7 @@ export function Room() {
 
         <button
           type="submit"
+          onClick={handleShareRoom}
           className="bg-zinc-800 ml-auto transition-colors hover:bg-zinc-700 text-zinc-300 px-3 py-1.5 gap-1.5 flex items-center rounded-lg font-medium text-sm cursor-pointer"
         >
           Compartilhar
@@ -45,31 +61,9 @@ export function Room() {
         </button>
       </form>
 
-      <ol className="list-decimal list-outside px-3 space-y-8">
-        <li className="ml-4 leading-relaxed text-zinc-100">
-          Oque é GoLang e quais suas principais vantagens em comparação com outras linguagens de programação com Python,Java ou C++
-
-          <button
-            type="button"
-            className="mt-3 flex items-center gap-2 text-orange-400 text-sm cursor-pointer font-medium hover:text-orange-500"
-          >
-            <ArrowUp className="size-4" />
-            Curtir pergunta (123)
-          </button>
-        </li>
-
-        <li className="ml-4 leading-relaxed text-zinc-100">
-          Oque é GoLang e quais suas principais vantagens em comparação com outras linguagens de programação com Python,Java ou C++
-
-          <button
-            type="button"
-            className="mt-3 flex items-center gap-2 text-zinc-400 text-sm cursor-pointer font-medium hover:text-zinc-300"
-          >
-            <ArrowUp className="size-4" />
-            Curtir pergunta (123)
-          </button>
-        </li>
-      </ol>
+      <Suspense fallback={<p>Carregando...</p>}>
+        <Messages />
+      </Suspense>
     </div>
   )
 }
