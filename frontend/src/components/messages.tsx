@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { Message } from "./message";
 import { getRoomMessages } from "../http/get-room-messages";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useMessagesWebSockets } from "../hooks/use-messages-web-sockets";
 
 export function Messages() {
   const { roomId } = useParams()
@@ -16,21 +16,14 @@ export function Messages() {
     queryFn: () => getRoomMessages({ roomId }),
   })
 
-  useEffect(() => {
-    const ws = new WebSocket(`ws://localhost:8080/subscribe/${roomId}`)
+  useMessagesWebSockets({ roomId })
 
-    ws.onopen = () => {
-      console.log('Websocket conected!')
-    }
-
-    return () => {
-      ws.close()
-    }
-  }, [roomId])
+  const sortedMessages = data.messages.sort((a, b) =>
+    b.amountOfReactions - a.amountOfReactions)
 
   return (
     <ol className="list-decimal list-outside px-3 space-y-8">
-      {data.messages.map((message) => (
+      {sortedMessages.map((message) => (
         <Message
           id={message.id}
           text={message.text}
