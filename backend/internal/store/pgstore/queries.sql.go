@@ -32,6 +32,20 @@ func (q *Queries) GetMessage(ctx context.Context, id uuid.UUID) (Message, error)
 	return i, err
 }
 
+const getRoom = `-- name: GetRoom :one
+SELECT
+    "id", "theme"
+FROM rooms
+WHERE id = $1
+`
+
+func (q *Queries) GetRoom(ctx context.Context, id uuid.UUID) (Room, error) {
+	row := q.db.QueryRow(ctx, getRoom, id)
+	var i Room
+	err := row.Scan(&i.ID, &i.Theme)
+	return i, err
+}
+
 const getRoomMessages = `-- name: GetRoomMessages :many
 SELECT
     "id", "room_id", "message", "creation_count", "answered"

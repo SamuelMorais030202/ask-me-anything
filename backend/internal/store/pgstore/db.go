@@ -7,7 +7,6 @@ package pgstore
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -24,10 +23,6 @@ func New(db DBTX) *Queries {
 
 type Queries struct {
 	db DBTX
-}
-
-func (q *Queries) GetRoom(context context.Context, roomID uuid.UUID) (any, error) {
-	panic("unimplemented")
 }
 
 func (q *Queries) WithTx(tx pgx.Tx) *Queries {
