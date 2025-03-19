@@ -15,7 +15,7 @@ export async function getRoomMessages({ roomId }: GetRoomMessagesRequest): Promi
   const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/rooms/${roomId}/messages`)
 
   const data: Array<{
-    Id: string
+    ID: string
     RoomID: string
     Message: string
     CreationCount: number
@@ -25,7 +25,7 @@ export async function getRoomMessages({ roomId }: GetRoomMessagesRequest): Promi
   return {
     messages: data.map(item => {
       return {
-        id: item.Id,
+        id: item.ID,
         text: item.Message,
         amountOfReactions: item.CreationCount,
         answered: item.Answered,
