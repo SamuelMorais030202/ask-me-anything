@@ -19,6 +19,7 @@ export function Messages() {
     <ol className="list-decimal list-outside px-3 space-y-8">
       {data.messages.map((message) => (
         <Message
+          id={message.id}
           text={message.text}
           amountOfReactions={message.amountOfReactions}
           answered={message.answered}
